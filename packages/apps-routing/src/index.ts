@@ -80,7 +80,8 @@ export default function create (t: TFunction): Routes {
     nis(t),
     gilt(t),
     scheduler(t),
-    calendar(t),
+    // TODO: Will be added later.
+    // calendar(t),
     contracts(t),
     storage(t),
     extrinsics(t),

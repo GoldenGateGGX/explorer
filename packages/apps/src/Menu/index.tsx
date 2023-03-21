@@ -27,16 +27,10 @@ interface Props {
 function createExternals (t: (key: string, optionsOrText?: string | { replace: Record<string, unknown> }, options?: { ns: string }) => string): ItemRoute[] {
   return [
     {
-      href: 'https://github.com/polkadot-js/apps',
+      href: 'https://github.com/GoldenGateGGX/blockchain-explorer',
       icon: 'code-branch',
       name: 'github',
-      text: t('nav.github', 'GitHub', { ns: 'apps-routing' })
-    },
-    {
-      href: 'https://wiki.polkadot.network',
-      icon: 'book',
-      name: 'wiki',
-      text: t('nav.wiki', 'Wiki', { ns: 'apps-routing' })
+      text: t<string>('nav.github', 'GitHub', { ns: 'apps-routing' })
     }
   ];
 }
@@ -151,7 +145,8 @@ function Menu ({ className = '' }: Props): React.ReactElement<Props> {
             ))}
           </ul>
         </div>
-        <NodeInfo className='media--1400' />
+        {/** TODO: Will be added later. */}
+        {/* <NodeInfo className='media--1400' /> */}
       </div>
     </StyledDiv>
   );
@@ -179,7 +174,7 @@ const StyledDiv = styled.div`
 
     .smallHide {
       + div {
-        color: #fff;
+        color: var(--color-text);
       }
     }
   }
@@ -224,6 +219,17 @@ const StyledDiv = styled.div`
     list-style: none;
     margin: 0 1rem 0 0;
     padding: 0;
+
+    .isActive > .groupHdr {
+      background: #c6a35b;
+      > .smallHide {
+        color: #020319;
+      }
+
+      > svg > path {
+        fill: #020319;
+      }
+    }
 
     > li {
       display: inline-block;
