@@ -59,6 +59,7 @@ export const DEFAULT_AUX = ['Aux1', 'Aux2', 'Aux3', 'Aux4', 'Aux5', 'Aux6', 'Aux
 
 const DISALLOW_EXTENSIONS: string[] = [];
 const EMPTY_STATE = { hasInjectedAccounts: false, isApiReady: false } as unknown as ApiState;
+const CHAIN_SS58_PREFIX = 'chainSS58Prefix';
 
 function isKeyringLoaded () {
   try {
@@ -140,6 +141,9 @@ async function loadOnReady (api: ApiPromise, endpoint: LinkOption | null, inject
   const ss58Format = settings.prefix === -1
     ? chainSS58
     : settings.prefix;
+
+  localStorage.setItem(CHAIN_SS58_PREFIX, chainSS58.toString());
+
   const tokenSymbol = properties.tokenSymbol.unwrapOr([formatBalance.getDefaults().unit, ...DEFAULT_AUX]);
   const tokenDecimals = properties.tokenDecimals.unwrapOr([DEFAULT_DECIMALS]);
   const isEthereum = ethereumChains.includes(api.runtimeVersion.specName.toString());
