@@ -23,16 +23,16 @@ interface Props {
   onClose: () => void;
 }
 
-interface UrlState {
+export interface UrlState {
   apiUrl: string;
   groupIndex: number;
   hasUrlChanged: boolean;
   isUrlValid: boolean;
 }
 
-const STORAGE_AFFINITIES = 'network:affinities';
+export const STORAGE_AFFINITIES = 'network:affinities';
 
-function isValidUrl (url: string): boolean {
+export function isValidUrl (url: string): boolean {
   return (
     // some random length... we probably want to parse via some lib
     (url.length >= 7) &&
@@ -41,7 +41,7 @@ function isValidUrl (url: string): boolean {
   );
 }
 
-function combineEndpoints (endpoints: LinkOption[]): Group[] {
+export function combineEndpoints (endpoints: LinkOption[]): Group[] {
   return endpoints.reduce((result: Group[], e): Group[] => {
     if (e.isHeader) {
       result.push({ header: e.text, isDevelopment: e.isDevelopment, isSpaced: e.isSpaced, networks: [] });
@@ -68,22 +68,7 @@ function combineEndpoints (endpoints: LinkOption[]): Group[] {
   }, []);
 }
 
-function getCustomEndpoints (): string[] {
-  try {
-    const storedAsset = localStorage.getItem(CUSTOM_ENDPOINT_KEY);
-
-    if (storedAsset) {
-      return JSON.parse(storedAsset) as string[];
-    }
-  } catch (e) {
-    console.error(e);
-    // ignore error
-  }
-
-  return [];
-}
-
-function extractUrlState (apiUrl: string, groups: Group[]): UrlState {
+export function extractUrlState (apiUrl: string, groups: Group[]): UrlState {
   let groupIndex = groups.findIndex(({ networks }) =>
     networks.some(({ providers }) =>
       providers.some(({ url }) => url === apiUrl)
@@ -102,7 +87,7 @@ function extractUrlState (apiUrl: string, groups: Group[]): UrlState {
   };
 }
 
-function loadAffinities (groups: Group[]): Record<string, string> {
+export function loadAffinities (groups: Group[]): Record<string, string> {
   return Object
     .entries<string>(store.get(STORAGE_AFFINITIES) as Record<string, string> || {})
     .filter(([network, apiUrl]) =>
@@ -118,7 +103,7 @@ function loadAffinities (groups: Group[]): Record<string, string> {
     }), {});
 }
 
-function isSwitchDisabled (hasUrlChanged: boolean, apiUrl: string, isUrlValid: boolean): boolean {
+export function isSwitchDisabled (hasUrlChanged: boolean, apiUrl: string, isUrlValid: boolean): boolean {
   if (!hasUrlChanged) {
     return true;
   } else if (apiUrl.startsWith('light://')) {
@@ -133,67 +118,14 @@ function isSwitchDisabled (hasUrlChanged: boolean, apiUrl: string, isUrlValid: b
 function Endpoints ({ className = '', offset, onClose }: Props): React.ReactElement<Props> {
   const { t } = useTranslation();
   const linkOptions = createWsEndpoints(t);
-  const [groups, setGroups] = useState(() => combineEndpoints(linkOptions));
-  const [{ apiUrl, groupIndex, hasUrlChanged, isUrlValid }, setApiUrl] = useState<UrlState>(() => extractUrlState(settings.get().apiUrl, groups));
-  const [storedCustomEndpoints, setStoredCustomEndpoints] = useState<string[]>(() => getCustomEndpoints());
+  const [groups] = useState(() => combineEndpoints(linkOptions));
+  const [{ apiUrl, groupIndex, hasUrlChanged, isUrlValid }, setApiUrl] = useState<UrlState>(() => extractUrlState(settings.get().apiUrl, groups));;
   const [affinities, setAffinities] = useState(() => loadAffinities(groups));
   const sidebarRef = useRef<HTMLDivElement>(null);
-
-  const isKnownUrl = useMemo(() => {
-    let result = false;
-
-    linkOptions.some((endpoint) => {
-      if (endpoint.value === apiUrl) {
-        result = true;
-
-        return true;
-      }
-
-      return false;
-    });
-
-    return result;
-  }, [apiUrl, linkOptions]);
-
-  const isSavedCustomEndpoint = useMemo(() => {
-    let result = false;
-
-    storedCustomEndpoints.some((endpoint) => {
-      if (endpoint === apiUrl) {
-        result = true;
-
-        return true;
-      }
-
-      return false;
-    });
-
-    return result;
-  }, [apiUrl, storedCustomEndpoints]);
 
   const _changeGroup = useCallback(
     (groupIndex: number) => setApiUrl((state) => ({ ...state, groupIndex })),
     []
-  );
-
-  const _removeApiEndpoint = useCallback(
-    (): void => {
-      if (!isSavedCustomEndpoint) {
-        return;
-      }
-
-      const newStoredCurstomEndpoints = storedCustomEndpoints.filter((url) => url !== apiUrl);
-
-      try {
-        localStorage.setItem(CUSTOM_ENDPOINT_KEY, JSON.stringify(newStoredCurstomEndpoints));
-        setGroups(combineEndpoints(createWsEndpoints(t)));
-        setStoredCustomEndpoints(getCustomEndpoints());
-      } catch (e) {
-        console.error(e);
-        // ignore error
-      }
-    },
-    [apiUrl, isSavedCustomEndpoint, storedCustomEndpoints, t]
   );
 
   const _setApiUrl = useCallback(
@@ -210,38 +142,13 @@ function Endpoints ({ className = '', offset, onClose }: Props): React.ReactElem
     [groups]
   );
 
-  const _onChangeCustom = useCallback(
-    (apiUrl: string): void => {
-      if (!isAscii(apiUrl)) {
-        apiUrl = punycode.toASCII(apiUrl);
-      }
-
-      setApiUrl(extractUrlState(apiUrl, groups));
-    },
-    [groups]
-  );
-
   const _onApply = useCallback(
     (): void => {
       settings.set({ ...(settings.get()), apiUrl });
       window.location.assign(`${window.location.origin}${window.location.pathname}?rpc=${encodeURIComponent(apiUrl)}${window.location.hash}`);
-      // window.location.reload();
       onClose();
     },
     [apiUrl, onClose]
-  );
-
-  const _saveApiEndpoint = useCallback(
-    (): void => {
-      try {
-        localStorage.setItem(CUSTOM_ENDPOINT_KEY, JSON.stringify([...storedCustomEndpoints, apiUrl]));
-        _onApply();
-      } catch (e) {
-        console.error(e);
-        // ignore error
-      }
-    },
-    [_onApply, apiUrl, storedCustomEndpoints]
   );
 
   const canSwitch = useMemo(
@@ -270,41 +177,13 @@ function Endpoints ({ className = '', offset, onClose }: Props): React.ReactElem
           affinities={affinities}
           apiUrl={apiUrl}
           index={index}
+          isDisabled={canSwitch}
           isSelected={groupIndex === index}
           key={index}
           setApiUrl={_setApiUrl}
           setGroup={_changeGroup}
           value={group}
         >
-          {group.isDevelopment && (
-            <div className='endpointCustomWrapper'>
-              <Input
-                className='endpointCustom'
-                isError={!isUrlValid}
-                isFull
-                label={t('custom endpoint')}
-                onChange={_onChangeCustom}
-                value={apiUrl}
-              />
-              {isSavedCustomEndpoint
-                ? (
-                  <Button
-                    className='customButton'
-                    icon='trash-alt'
-                    onClick={_removeApiEndpoint}
-                  />
-                )
-                : (
-                  <Button
-                    className='customButton'
-                    icon='save'
-                    isDisabled={!isUrlValid || isKnownUrl}
-                    onClick={_saveApiEndpoint}
-                  />
-                )
-              }
-            </div>
-          )}
         </GroupDisplay>
       ))}
     </StyledSidebar>

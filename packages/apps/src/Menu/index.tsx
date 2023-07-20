@@ -18,7 +18,6 @@ import { useTranslation } from '../translate.js';
 import ChainInfo from './ChainInfo.js';
 import Grouping from './Grouping.js';
 import Item from './Item.js';
-import NodeInfo from './NodeInfo.js';
 
 interface Props {
   className?: string;
@@ -27,10 +26,10 @@ interface Props {
 function createExternals (t: (key: string, optionsOrText?: string | { replace: Record<string, unknown> }, options?: { ns: string }) => string): ItemRoute[] {
   return [
     {
-      href: 'https://github.com/GoldenGateGGX/blockchain-explorer',
+      href: 'https://github.com/GoldenGateGGX/explorer',
       icon: 'code-branch',
       name: 'github',
-      text: t<string>('nav.github', 'GitHub', { ns: 'apps-routing' })
+      text: t('nav.github', 'GitHub', { ns: 'apps-routing' })
     }
   ];
 }
