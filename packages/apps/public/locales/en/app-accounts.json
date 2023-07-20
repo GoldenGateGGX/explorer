@@ -54,6 +54,7 @@
   "Ensure that you utilized the \"Save\" functionality before using a generated address to receive funds. Without saving the address and the associated seed any funds sent to it will be lost.": "Ensure that you utilized the \"Save\" functionality before using a generated address to receive funds. Without saving the address and the associated seed any funds sent to it will be lost.",
   "Ensure you are using a strong password for proper account protection.": "Ensure you are using a strong password for proper account protection.",
   "Evaluated {{count}} keys in {{elapsed}}s ({{avg}} keys/s)": "Evaluated {{count}} keys in {{elapsed}}s ({{avg}} keys/s)",
+  "EVM address has been converted to Substrate format": "EVM address has been converted to Substrate format",
   "Existing approvals ({{approvals}}/{{threshold}})": "Existing approvals ({{approvals}}/{{threshold}})",
   "For approvals outstanding approvers will be shown, for hashes that should be cancelled the first approver is required.": "For approvals outstanding approvers will be shown, for hashes that should be cancelled the first approver is required.",
   "Forget this account": "Forget this account",

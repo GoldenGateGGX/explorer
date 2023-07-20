@@ -80,7 +80,8 @@ export default function create (t: TFunction): Routes {
     nis(t),
     gilt(t),
     scheduler(t),
-    calendar(t),
+    // TODO: Will be added later.
+    // calendar(t),
     contracts(t),
     storage(t),
     extrinsics(t),
@@ -90,7 +91,8 @@ export default function create (t: TFunction): Routes {
     sudo(t),
     files(t),
     js(t),
-    utilities(t),
+    // TODO: Will be added later.
+    // utilities(t),
     settings(t)
   ];
 }
