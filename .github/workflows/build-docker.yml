@@ -3,7 +3,6 @@ name: GGX Explorer Staging
 on:
   push:
     branches: 
-      - docker-build-action
       - staging
   pull_request:
 
