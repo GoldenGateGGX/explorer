@@ -7,11 +7,12 @@ on:
       - staging
   pull_request:
 
-jobs:
-  docker-build-push-sydney:
-    permissions:
+permissions:
       contents: read
       id-token: write
+
+jobs:
+  docker-build-push-sydney:
     runs-on: ubuntu-latest
     steps:
       - name: Configure AWS Credentials
