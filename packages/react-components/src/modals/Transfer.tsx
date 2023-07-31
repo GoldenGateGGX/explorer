@@ -8,7 +8,7 @@ import type { BN } from '@polkadot/util';
 import React, { useEffect, useState } from 'react';
 
 import { checkAddress } from '@polkadot/phishing';
-import { useApi, useCall } from '@polkadot/react-hooks';
+import { useApi, useCall, useQueue } from '@polkadot/react-hooks';
 import { Available } from '@polkadot/react-query';
 import { BN_HUNDRED, BN_ZERO, isFunction, nextTick } from '@polkadot/util';
 
@@ -46,8 +46,11 @@ async function checkPhishing (_senderId: string | null, recipientId: string | nu
   ];
 }
 
+const ETH_STORAGE_KEY = 'ethAddress';
+
 function Transfer ({ className = '', onClose, recipientId: propRecipientId, senderId: propSenderId }: Props): React.ReactElement<Props> {
   const { t } = useTranslation();
+  const { queueAction } = useQueue();
   const { api } = useApi();
   const [amount, setAmount] = useState<BN | undefined>(BN_ZERO);
   const [hasAvailable] = useState(true);
@@ -59,6 +62,7 @@ function Transfer ({ className = '', onClose, recipientId: propRecipientId, send
   const [[, recipientPhish], setPhishing] = useState<[string | null, string | null]>([null, null]);
   const balances = useCall<DeriveBalancesAll>(api.derive.balances?.all, [propSenderId || senderId]);
   const accountInfo = useCall<AccountInfoWithProviders | AccountInfoWithRefCount>(api.query.system.account, [propSenderId || senderId]);
+  const ethAddress = localStorage.getItem(ETH_STORAGE_KEY);
 
   useEffect((): void => {
     const fromId = propSenderId || senderId as string;
@@ -99,11 +103,27 @@ function Transfer ({ className = '', onClose, recipientId: propRecipientId, send
     : true;
   const canToggleAll = !isProtected && balances && balances.accountId?.eq(propSenderId || senderId) && maxTransfer && noReference;
 
+  useEffect(() => {
+    if (ethAddress) {
+      queueAction({
+        action: 'completed',
+        message: t('EVM address has been converted to Substrate format'),
+        status: 'success'
+      });
+      localStorage.removeItem(ETH_STORAGE_KEY);
+    }
+  }, [ethAddress, t, queueAction]);
+
+  function closeModal () {
+    onClose();
+    localStorage.removeItem(ETH_STORAGE_KEY);
+  }
+
   return (
     <StyledModal
       className='app--accounts-Modal'
       header={t('Send funds')}
-      onClose={onClose}
+      onClose={closeModal as () => void}
       size='large'
     >
       <Modal.Content>

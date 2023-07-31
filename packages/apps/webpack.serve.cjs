@@ -14,11 +14,12 @@ module.exports = merge(
       hot: true,
       open: false,
       port: 3000,
-      static: path.resolve(__dirname, 'build')
+      static: path.resolve(__dirname, 'build'),
+      allowedHosts: "all"
     },
     plugins: [
       new HtmlWebpackPlugin({
-        PAGE_TITLE: 'Polkadot/Substrate Portal',
+        PAGE_TITLE: 'GGX',
         inject: true,
         template: path.join(__dirname, 'public/index.html')
       })
