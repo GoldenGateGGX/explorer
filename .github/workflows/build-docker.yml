@@ -4,7 +4,7 @@ on:
   push:
     branches: 
       - staging
-  pull_request:
+      - automate-deployment
 
 permissions:
       contents: read
@@ -30,6 +30,11 @@ jobs:
       - name: Set Image Tag
         run: echo "SHORT_SHA=$(echo ${GITHUB_SHA} | cut -c1-8)" >> $GITHUB_ENV
 
+      - name: build full image ref
+        id: image_full_ref
+        run: echo "IMAGE_TAG=${{ steps.login-ecr-public.outputs.registry }}/explorer-dev:explorer-stg-$SHORT_SHA" >> "$GITHUB_OUTPUT"
+
+
       - name: Build, tag, and upload the docker image
         env:
           REGISTRY: ${{ steps.login-ecr-public.outputs.registry }}
@@ -40,3 +45,30 @@ jobs:
 
       - name: Log out of Amazon ECR
         run: docker logout ${{ steps.login-ecr-public.outputs.registry }}
+
+      - name: Generate token
+        id: generate_token
+        uses: getsentry/action-github-app-token@v2
+        with:
+          # RSA Private key created for the GitHub app
+          private_key: ${{ secrets.GH_APP_PRIVATE_KEY }}
+          # App id
+          app_id: ${{ secrets.GH_APP_ID }}
+
+      - name: Check out argocd code
+        uses: actions/checkout@v3
+        with:
+          repository: ggxchain/ggx-argocd-apps
+          path: argocd-manifests
+          token: ${{ steps.generate_token.outputs.token }}
+
+      - name: Update Image Version in the related deployment manifest
+        uses: fjogeleit/yaml-update-action@main
+        with:
+          valueFile: 'manifests/explorer-staging/deployment.yaml'
+          propertyPath: 'spec.template.spec.containers[0].image'
+          value: ${{ steps.image_full_ref.outputs.IMAGE_TAG }}
+          branch: deployment/${{ steps.image.outputs.version }}
+          targetBranch: main
+          createPR: true
+          message: 'Update Image Version to ${{ steps.image_full_ref.outputs.IMAGE_TAG }}' 
