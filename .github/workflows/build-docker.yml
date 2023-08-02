@@ -69,6 +69,8 @@ jobs:
           propertyPath: 'spec.template.spec.containers[0].image'
           value: ${{ steps.image_full_ref.outputs.IMAGE_TAG }}
           branch: deployment/${{ steps.image.outputs.version }}
+          repository: ggxchain/ggx-argocd-apps
           targetBranch: main
+          workDir: argocd-manifests
           createPR: true
           message: 'Update Image Version to ${{ steps.image_full_ref.outputs.IMAGE_TAG }}' 
