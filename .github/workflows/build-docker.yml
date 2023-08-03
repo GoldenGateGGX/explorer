@@ -72,6 +72,7 @@ jobs:
           branch: deployment/${{ env.SHORT_SHA }}
           repository: ggxchain/ggx-argocd-apps
           targetBranch: main
+          masterBranchName: main
           workDir: argocd-manifests
           createPR: true
           message: 'Update Image Version to ${{ steps.image_full_ref.outputs.IMAGE_TAG }}' 
