@@ -16,7 +16,7 @@ interface EnvWindow {
 }
 
 // TODO: Will be moved to config.
-const nodes = [{ link: 'wss://testnet.node.sydney.ggxchain.io', name: 'SYDNEY' }, { link: 'wss://testnet.node.brooklyn.ggxchain.io', name: 'BROOKLYN' }];
+const nodes = [{ link: 'wss://testnet.node.sydney.ggxchain.io', name: 'SYDNEY' }, { link: 'ws://18.193.253.223:9944', name: 'BROOKLYN' }];
 
 export function createCustom (t: TFunction): LinkOption[] {
   const WS_URL = (
