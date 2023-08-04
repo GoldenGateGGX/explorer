@@ -75,4 +75,4 @@ jobs:
           masterBranchName: main
           workDir: argocd-manifests
           createPR: true
-          message: 'Update Image Version to ${{ steps.image_full_ref.outputs.IMAGE_TAG }}' 
+          message: 'Update Image Version for explorer-staging' 
