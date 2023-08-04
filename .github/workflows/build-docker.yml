@@ -69,7 +69,7 @@ jobs:
           valueFile: 'manifests/explorer-staging/deployment.yaml'
           propertyPath: 'spec.template.spec.containers[0].image'
           value: ${{ steps.image_full_ref.outputs.IMAGE_TAG }}
-          branch: deployment/${{ env.SHORT_SHA }}
+          branch: deployment-${{ env.SHORT_SHA }}
           repository: ggxchain/ggx-argocd-apps
           targetBranch: main
           masterBranchName: main
