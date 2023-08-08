@@ -61,7 +61,7 @@ jobs:
         with:
           repository: ggxchain/ggx-argocd-apps
           ref: main
-          path: argocd-manifests
+          path: argocd
           token: ${{ steps.generate_token.outputs.token }}
 
       - name: Update Image Version in the related deployment manifest
@@ -73,8 +73,8 @@ jobs:
           branch: deployment-${{ env.SHORT_SHA }}
           repository: ggxchain/ggx-argocd-apps
           targetBranch: main
-          masterBranchName: main
-          workDir: argocd-manifests
+          workDir: argocd
+          token: ${{ steps.generate_token.outputs.token }}
           createPR: true
           message: 'Update Image Version for explorer-staging' 
 
