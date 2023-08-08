@@ -4,10 +4,10 @@ on:
   push:
     branches: 
       - staging
-  pull_request:
 
 permissions:
-      contents: read
+      contents: write
+      pull-requests: write
       id-token: write
 
 jobs:
@@ -30,6 +30,11 @@ jobs:
       - name: Set Image Tag
         run: echo "SHORT_SHA=$(echo ${GITHUB_SHA} | cut -c1-8)" >> $GITHUB_ENV
 
+      - name: build full image ref
+        id: image_full_ref
+        run: echo "IMAGE_TAG=${{ steps.login-ecr-public.outputs.registry }}/explorer-dev:explorer-stg-$SHORT_SHA" >> "$GITHUB_OUTPUT"
+
+
       - name: Build, tag, and upload the docker image
         env:
           REGISTRY: ${{ steps.login-ecr-public.outputs.registry }}
@@ -40,3 +45,48 @@ jobs:
 
       - name: Log out of Amazon ECR
         run: docker logout ${{ steps.login-ecr-public.outputs.registry }}
+
+      - name: Generate token
+        id: generate_token
+        uses: getsentry/action-github-app-token@v2
+        with:
+          # RSA Private key created for the GitHub app
+          private_key: ${{ secrets.GH_APP_PRIVATE_KEY }}
+          # App id
+          app_id: ${{ secrets.GH_APP_ID }}
+
+      - name: Check out argocd code
+        uses: actions/checkout@v3
+        with:
+          repository: ggxchain/ggx-argocd-apps
+          ref: main
+          path: argocd
+          token: ${{ steps.generate_token.outputs.token }}
+
+      - name: Update Image Version in the related deployment manifest
+        uses: fjogeleit/yaml-update-action@main
+        with:
+          valueFile: 'manifests/explorer-staging/deployment.yaml'
+          propertyPath: 'spec.template.spec.containers[0].image'
+          value: ${{ steps.image_full_ref.outputs.IMAGE_TAG }}
+          commitChange: false
+          workDir: argocd
+
+      - name: Create Pull Request
+        id: cpr
+        uses: peter-evans/create-pull-request@v5
+        with:
+          path: argocd
+          token: ${{ steps.generate_token.outputs.token }}
+          title: "Update explorer-staging version to ${{ env.SHORT_SHA }}"
+          branch: explorer-stg-${{ env.SHORT_SHA}}
+          delete-branch: true
+          labels: |
+            yaml-updates
+            explorer-stg
+          commit-message: "Deploy explorer-stg-${{ env.SHORT_SHA }}"
+
+      - name: Check outputs
+        if: ${{ steps.cpr.outputs.pull-request-number }}
+        run: |
+          echo "Accept Pull Request to deploy this version - ${{ steps.cpr.outputs.pull-request-url }}" >> $GITHUB_STEP_SUMMARY
