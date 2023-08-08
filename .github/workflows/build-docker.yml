@@ -79,10 +79,15 @@ jobs:
         with:
           path: argocd
           token: ${{ steps.generate_token.outputs.token }}
+          title: "Update explorer-staging version to ${{ env.SHORT_SHA }}"
           branch: explorer-stg-${{ env.SHORT_SHA}}
+          delete-branch: true
+          labels: |
+            yaml-updates
+            explorer-stg
+          commit-message: "Deploy explorer-stg-${{ env.SHORT_SHA }}"
 
       - name: Check outputs
         if: ${{ steps.cpr.outputs.pull-request-number }}
         run: |
-          echo "Pull Request Number - ${{ steps.cpr.outputs.pull-request-number }}"
-          echo "Pull Request URL - ${{ steps.cpr.outputs.pull-request-url }}"
+          echo "Accept Pull Request to deploy this version - ${{ steps.cpr.outputs.pull-request-url }}" >> $GITHUB_STEP_SUMMARY
