@@ -9,6 +9,8 @@ Action Summary
 
 ![Example Deployment PR](./readme-images/example-pr.png)
 
+After merging the PR listed in action summary, ArgoCD will take care of deployment. It should take around ~2-3 minutes. ArgoCD access will be configured with email login soon and team will be able to check deployment status.
+
 # @polkadot/apps
 
 A Portal into the Polkadot and Substrate networks. Provides a view and interaction layer from a browser.
