@@ -11,11 +11,11 @@ module.exports = merge(
   baseConfig(__dirname, 'development'),
   {
     devServer: {
+      allowedHosts: 'all',
       hot: true,
       open: false,
       port: 3000,
-      static: path.resolve(__dirname, 'build'),
-      allowedHosts: "all"
+      static: path.resolve(__dirname, 'build')
     },
     plugins: [
       new HtmlWebpackPlugin({

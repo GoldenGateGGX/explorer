@@ -193,7 +193,7 @@ function Endpoints ({ className = '', offset, onClose }: Props): React.ReactElem
         // ignore error
       }
     },
-    [apiUrl, isSavedCustomEndpoint, storedCustomEndpoints, t]	
+    [apiUrl, isSavedCustomEndpoint, storedCustomEndpoints, t]
   );
 
   const _setApiUrl = useCallback(
