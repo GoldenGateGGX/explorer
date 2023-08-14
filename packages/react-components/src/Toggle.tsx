@@ -16,7 +16,7 @@ interface Props {
   value?: boolean;
 }
 
-function Toggle({ className = '', isDisabled, isRadio, label, onChange, preventDefault, value }: Props): React.ReactElement<Props> {
+function Toggle ({ className = '', isDisabled, label, onChange, preventDefault, value }: Props): React.ReactElement<Props> {
   const { t } = useTranslation();
   const _onClick = useCallback(
     (event: React.MouseEvent<HTMLDivElement, MouseEvent>): void => {

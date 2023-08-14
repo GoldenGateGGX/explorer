@@ -1,15 +1,16 @@
 // Copyright 2017-2023 @polkadot/react-hooks authors & contributors
 // SPDX-License-Identifier: Apache-2.0
 
+import type { ReactElement } from 'react';
 import type { ApiPromise } from '@polkadot/api';
+import type { Codec } from '@polkadot/types/types';
 import type { BN } from '@polkadot/util';
 import type { Inflation } from './types.js';
 
-import { ReactElement, useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 
 import { getInflationParams } from '@polkadot/apps-config';
 import valueToText from '@polkadot/react-params/valueToText';
-import { Codec } from '@polkadot/types/types';
 import { BN_MILLION, BN_ZERO } from '@polkadot/util';
 
 import { createNamedHook } from './createNamedHook.js';

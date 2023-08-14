@@ -8,7 +8,6 @@ import addresses from './addresses.js';
 import alliance from './alliance.js';
 import assets from './assets.js';
 import bounties from './bounties.js';
-import calendar from './calendar.js';
 import claims from './claims.js';
 import collator from './collator.js';
 import contracts from './contracts.js';
@@ -91,8 +90,7 @@ export default function create (t: TFunction): Routes {
     sudo(t),
     files(t),
     js(t),
-    // TODO: Will be added later.
-    // utilities(t),
+    utilities(t),
     settings(t)
   ];
 }

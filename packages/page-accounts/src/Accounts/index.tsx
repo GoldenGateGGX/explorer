@@ -26,7 +26,6 @@ import { useTranslation } from '../translate.js';
 import { SORT_CATEGORY, sortAccounts } from '../util.js';
 import Account from './Account.js';
 import BannerClaims from './BannerClaims.js';
-import BannerExtension from './BannerExtension.js';
 import Summary from './Summary.js';
 
 interface Balances {
