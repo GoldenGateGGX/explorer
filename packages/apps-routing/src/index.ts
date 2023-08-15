@@ -8,7 +8,6 @@ import addresses from './addresses.js';
 import alliance from './alliance.js';
 import assets from './assets.js';
 import bounties from './bounties.js';
-import calendar from './calendar.js';
 import claims from './claims.js';
 import collator from './collator.js';
 import contracts from './contracts.js';
@@ -80,7 +79,8 @@ export default function create (t: TFunction): Routes {
     nis(t),
     gilt(t),
     scheduler(t),
-    calendar(t),
+    // TODO: Will be added later.
+    // calendar(t),
     contracts(t),
     storage(t),
     extrinsics(t),

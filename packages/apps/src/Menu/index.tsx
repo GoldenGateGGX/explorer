@@ -18,7 +18,6 @@ import { useTranslation } from '../translate.js';
 import ChainInfo from './ChainInfo.js';
 import Grouping from './Grouping.js';
 import Item from './Item.js';
-import NodeInfo from './NodeInfo.js';
 
 interface Props {
   className?: string;
@@ -27,16 +26,10 @@ interface Props {
 function createExternals (t: (key: string, optionsOrText?: string | { replace: Record<string, unknown> }, options?: { ns: string }) => string): ItemRoute[] {
   return [
     {
-      href: 'https://github.com/polkadot-js/apps',
+      href: 'https://github.com/GoldenGateGGX/explorer',
       icon: 'code-branch',
       name: 'github',
       text: t('nav.github', 'GitHub', { ns: 'apps-routing' })
-    },
-    {
-      href: 'https://wiki.polkadot.network',
-      icon: 'book',
-      name: 'wiki',
-      text: t('nav.wiki', 'Wiki', { ns: 'apps-routing' })
     }
   ];
 }
@@ -151,7 +144,8 @@ function Menu ({ className = '' }: Props): React.ReactElement<Props> {
             ))}
           </ul>
         </div>
-        <NodeInfo className='media--1400' />
+        {/** TODO: Will be added later. */}
+        {/* <NodeInfo className='media--1400' /> */}
       </div>
     </StyledDiv>
   );
@@ -176,6 +170,12 @@ const StyledDiv = styled.div`
     width: 100%;
     max-width: var(--width-full);
     margin: 0 auto;
+
+    .smallHide {
+      + div {
+        color: var(--color-text);
+      }
+    }
   }
 
   &.isLoading {
@@ -218,6 +218,17 @@ const StyledDiv = styled.div`
     list-style: none;
     margin: 0 1rem 0 0;
     padding: 0;
+
+    .isActive > .groupHdr {
+      background: #c6a35b;
+      > .smallHide {
+        color: #020319;
+      }
+
+      > svg > path {
+        fill: #020319;
+      }
+    }
 
     > li {
       display: inline-block;

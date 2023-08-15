@@ -1,3 +1,16 @@
+# ggxchain/explorer
+
+This repository is configured to build docker image per environment branch. This is currently working for `staging` branch. 
+
+After merging code to the `staging` or `master` branch, [./github/workflows/build-docker.yml](./github/workflows/build-docker.yml) action will build docker, create pull request with image reference to the ggx-argocd-apps repository. Pull request URL can be checked froma ction summary once its completed. 
+
+![action summary](./readme-images/action-summary.png)
+Action Summary
+
+![Example Deployment PR](./readme-images/example-pr.png)
+
+After merging the PR listed in action summary, ArgoCD will take care of deployment. It should take around ~2-3 minutes. ArgoCD access will be configured with email login soon and team will be able to check deployment status.
+
 # @polkadot/apps
 
 A Portal into the Polkadot and Substrate networks. Provides a view and interaction layer from a browser.

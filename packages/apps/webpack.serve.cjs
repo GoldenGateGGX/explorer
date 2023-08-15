@@ -11,6 +11,7 @@ module.exports = merge(
   baseConfig(__dirname, 'development'),
   {
     devServer: {
+      allowedHosts: 'all',
       hot: true,
       open: false,
       port: 3000,
@@ -18,7 +19,7 @@ module.exports = merge(
     },
     plugins: [
       new HtmlWebpackPlugin({
-        PAGE_TITLE: 'Polkadot/Substrate Portal',
+        PAGE_TITLE: 'GGX',
         inject: true,
         template: path.join(__dirname, 'public/index.html')
       })

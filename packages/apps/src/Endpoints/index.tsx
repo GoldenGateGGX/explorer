@@ -23,16 +23,16 @@ interface Props {
   onClose: () => void;
 }
 
-interface UrlState {
+export interface UrlState {
   apiUrl: string;
   groupIndex: number;
   hasUrlChanged: boolean;
   isUrlValid: boolean;
 }
 
-const STORAGE_AFFINITIES = 'network:affinities';
+export const STORAGE_AFFINITIES = 'network:affinities';
 
-function isValidUrl (url: string): boolean {
+export function isValidUrl (url: string): boolean {
   return (
     // some random length... we probably want to parse via some lib
     (url.length >= 7) &&
@@ -41,7 +41,7 @@ function isValidUrl (url: string): boolean {
   );
 }
 
-function combineEndpoints (endpoints: LinkOption[]): Group[] {
+export function combineEndpoints (endpoints: LinkOption[]): Group[] {
   return endpoints.reduce((result: Group[], e): Group[] => {
     if (e.isHeader) {
       result.push({ header: e.text, isDevelopment: e.isDevelopment, isSpaced: e.isSpaced, networks: [] });
@@ -68,7 +68,7 @@ function combineEndpoints (endpoints: LinkOption[]): Group[] {
   }, []);
 }
 
-function getCustomEndpoints (): string[] {
+export function getCustomEndpoints (): string[] {
   try {
     const storedAsset = localStorage.getItem(CUSTOM_ENDPOINT_KEY);
 
@@ -83,7 +83,7 @@ function getCustomEndpoints (): string[] {
   return [];
 }
 
-function extractUrlState (apiUrl: string, groups: Group[]): UrlState {
+export function extractUrlState (apiUrl: string, groups: Group[]): UrlState {
   let groupIndex = groups.findIndex(({ networks }) =>
     networks.some(({ providers }) =>
       providers.some(({ url }) => url === apiUrl)
@@ -102,7 +102,7 @@ function extractUrlState (apiUrl: string, groups: Group[]): UrlState {
   };
 }
 
-function loadAffinities (groups: Group[]): Record<string, string> {
+export function loadAffinities (groups: Group[]): Record<string, string> {
   return Object
     .entries<string>(store.get(STORAGE_AFFINITIES) as Record<string, string> || {})
     .filter(([network, apiUrl]) =>
@@ -118,7 +118,7 @@ function loadAffinities (groups: Group[]): Record<string, string> {
     }), {});
 }
 
-function isSwitchDisabled (hasUrlChanged: boolean, apiUrl: string, isUrlValid: boolean): boolean {
+export function isSwitchDisabled (hasUrlChanged: boolean, apiUrl: string, isUrlValid: boolean): boolean {
   if (!hasUrlChanged) {
     return true;
   } else if (apiUrl.startsWith('light://')) {
@@ -135,9 +135,9 @@ function Endpoints ({ className = '', offset, onClose }: Props): React.ReactElem
   const linkOptions = createWsEndpoints(t);
   const [groups, setGroups] = useState(() => combineEndpoints(linkOptions));
   const [{ apiUrl, groupIndex, hasUrlChanged, isUrlValid }, setApiUrl] = useState<UrlState>(() => extractUrlState(settings.get().apiUrl, groups));
-  const [storedCustomEndpoints, setStoredCustomEndpoints] = useState<string[]>(() => getCustomEndpoints());
   const [affinities, setAffinities] = useState(() => loadAffinities(groups));
   const sidebarRef = useRef<HTMLDivElement>(null);
+  const [storedCustomEndpoints, setStoredCustomEndpoints] = useState<string[]>(() => getCustomEndpoints());
 
   const isKnownUrl = useMemo(() => {
     let result = false;
@@ -225,7 +225,6 @@ function Endpoints ({ className = '', offset, onClose }: Props): React.ReactElem
     (): void => {
       settings.set({ ...(settings.get()), apiUrl });
       window.location.assign(`${window.location.origin}${window.location.pathname}?rpc=${encodeURIComponent(apiUrl)}${window.location.hash}`);
-      // window.location.reload();
       onClose();
     },
     [apiUrl, onClose]
@@ -270,6 +269,7 @@ function Endpoints ({ className = '', offset, onClose }: Props): React.ReactElem
           affinities={affinities}
           apiUrl={apiUrl}
           index={index}
+          isDisabled={canSwitch}
           isSelected={groupIndex === index}
           key={index}
           setApiUrl={_setApiUrl}
