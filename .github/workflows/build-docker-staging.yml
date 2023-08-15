@@ -1,4 +1,4 @@
-name: GGX Explorer Staging
+name: GGX Explorer Staging Deployment
 
 on:
   push:
