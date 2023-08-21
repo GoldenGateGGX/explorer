@@ -86,7 +86,6 @@ function Addresses ({ className }: Props): React.ReactElement<Props> {
           autoFocus
           isError={!publicKey}
           label={t('address to convert')}
-          noConvert
           onChange={setAddress}
         />
       </div>
