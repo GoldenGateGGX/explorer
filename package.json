@@ -1,25 +1,25 @@
 {
-  "author": "Jaco Greeff <jacogr@gmail.com>",
-  "bugs": "https://github.com/polkadot-js/apps/issues",
-  "description": "An Apps portal into the Polkadot network",
+  "author": "Jaco Greeff <jacogr@gmail.com>, GGX",
+  "bugs": "https://github.com/ggxchain/explorer/issues",
+  "description": "GGX Chain explorer. Based on Polkadot/Substrate UI",
   "engines": {
     "node": ">=18.14"
   },
-  "homepage": "https://github.com/polkadot-js/apps#readme",
+  "homepage": "https://github.com/ggxchain/explorer#readme",
   "license": "Apache-2.0",
-  "name": "polkadot-apps",
+  "name": "GGX Chain Explorer",
   "packageManager": "yarn@3.2.0",
   "private": true,
   "repository": {
     "type": "git",
-    "url": "https://github.com/polkadot-js/apps.git"
+    "url": "https://github.com/ggxchain/explorer.git"
   },
   "sideEffects": false,
   "type": "module",
-  "version": "0.132.2-25-x",
+  "version": "0.1.0",
   "versions": {
-    "git": "0.132.2-25-x",
-    "npm": "0.132.1"
+    "git": "0.1.0",
+    "npm": "0.1.0"
   },
   "workspaces": [
     "packages/*"
