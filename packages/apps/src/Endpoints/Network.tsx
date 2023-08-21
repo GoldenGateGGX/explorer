@@ -113,6 +113,13 @@ const StyledDiv = styled.div`
 
     &+.ui--Toggle {
       margin-top: 1rem;
+      text-align: left;
+
+      label {
+        font-size: var(--font-size-tiny);
+        white-space: normal;
+        text-overflow: unset;
+      }
     }
 
     &.isChild .endpointIcon {
