@@ -26,12 +26,12 @@ interface Props {
   placeholder?: string;
 }
 
-function InputAddressSimple ({ autoFocus, bytesLength, children, className = '', defaultValue, forceIconType, isDisabled, isError, isFull, label, noConvert, onChange, onEnter, onEscape, placeholder }: Props): React.ReactElement<Props> {
+function InputAddressSimple ({ autoFocus, children, className = '', defaultValue, forceIconType, isDisabled, isError, isFull, label, noConvert, onChange, onEnter, onEscape, placeholder }: Props): React.ReactElement<Props> {
   const [address, setAddress] = useState<string | null>(defaultValue || null);
 
   const _onChange = useCallback(
     (_address: string): void => {
-      const address = toAddress(_address, undefined, bytesLength) || null;
+      const address = toAddress(_address, undefined) || null;
       const output = noConvert
         ? address
           ? _address
@@ -41,7 +41,7 @@ function InputAddressSimple ({ autoFocus, bytesLength, children, className = '',
       setAddress(output);
       onChange && onChange(output);
     },
-    [bytesLength, noConvert, onChange]
+    [noConvert, onChange]
   );
 
   return (
