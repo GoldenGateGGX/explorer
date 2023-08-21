@@ -324,6 +324,7 @@ const StyledSidebar = styled(Sidebar)`
   .endpointCustom {
     input {
       padding-right: 4rem;
+      font-size: var(--font-size-tiny) !important;
     }
   }
 
