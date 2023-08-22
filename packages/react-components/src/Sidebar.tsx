@@ -66,6 +66,10 @@ const StyledDiv = styled.div`
     position: absolute;
     right: 0.5rem;
     top: 0.5rem;
+
+    button:first-child {
+      display: none;
+    }
   }
 `;
 
