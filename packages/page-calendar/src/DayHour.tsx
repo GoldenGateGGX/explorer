@@ -37,7 +37,7 @@ function DayHour ({ className = '', date, hour, index, minutes, scheduled }: Pro
     [date, index, minutes, scheduled]
   );
 
-  const hourStr = `${` ${hour}`.slice(-2)} ${hour >= 12 ? 'pm' : 'am'}`;
+  const hourStr = `${` ${hour}`.slice(-2)} : 00`;
 
   return (
     <StyledDiv className={`${className}${filtered.length ? ' hasItems' : ''}`}>
