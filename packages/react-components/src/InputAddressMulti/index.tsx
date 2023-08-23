@@ -4,11 +4,13 @@
 import React, { useCallback, useEffect, useState } from 'react';
 
 import { useDebounce, useNextTick } from '@polkadot/react-hooks';
+import { hexToU8a, isHex } from '@polkadot/util';
 
 import Input from '../Input.js';
 import Spinner from '../Spinner.js';
 import { styled } from '../styled.js';
 import { useTranslation } from '../translate.js';
+import { toAddress } from '../util/toAddress.js';
 import Available from './Available.js';
 import Selected from './Selected.js';
 
@@ -38,6 +40,7 @@ function InputAddressMulti ({ available, availableLabel, className = '', default
   const { t } = useTranslation();
   const [_filter, setFilter] = useState<string>('');
   const [selected, setSelected] = useState<string[]>([]);
+  const [extendedAvailable, setExtendedAvailable] = useState<string[]>(available);
   const filter = useDebounce(_filter);
   const isNextTick = useNextTick();
 
@@ -58,6 +61,20 @@ function InputAddressMulti ({ available, availableLabel, className = '', default
     (address: string) => setSelected((prev) => exclude(prev, address)),
     []
   );
+
+  useEffect(() => {
+    const u8a = isHex(_filter) && hexToU8a(_filter);
+    const isEthAddress = u8a && u8a.length === 20;
+
+    if (isEthAddress) {
+      const convertedAddress = toAddress(_filter);
+
+      convertedAddress &&
+        !extendedAvailable.includes(convertedAddress) &&
+        setExtendedAvailable([...extendedAvailable, convertedAddress]);
+      setFilter('');
+    }
+  }, [available, _filter, extendedAvailable]);
 
   return (
     <StyledDiv className={`${className} ui--InputAddressMulti`}>
@@ -87,7 +104,7 @@ function InputAddressMulti ({ available, availableLabel, className = '', default
           <label>{availableLabel}</label>
           <div className='ui--InputAddressMulti-items'>
             {isNextTick
-              ? available.map((address) => (
+              ? extendedAvailable.map((address) => (
                 <Available
                   address={address}
                   filter={filter}
