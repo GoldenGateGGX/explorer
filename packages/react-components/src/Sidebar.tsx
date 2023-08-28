@@ -67,7 +67,7 @@ const StyledDiv = styled.div`
     right: 0.5rem;
     top: 0.5rem;
 
-    button:first-child {
+    button:first-child:not([data-testid="close-sidebar-button"]) {
       display: none;
     }
   }
