@@ -194,6 +194,8 @@ function Bond ({ className = '', isNominating, minNominated, minNominatorBond, m
       <Modal.Columns hint={t('Rewards (once paid) can be deposited to either the stash or controller, with different effects.')}>
         <Dropdown
           defaultValue={0}
+          // TODO: Temporary solution.
+          isDisabled={true}
           label={t('payment destination')}
           onChange={setDestination}
           options={options}
