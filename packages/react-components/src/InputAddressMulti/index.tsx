@@ -3,7 +3,7 @@
 
 import React, { useCallback, useEffect, useState } from 'react';
 
-import { useDebounce, useNextTick } from '@polkadot/react-hooks';
+import { useDebounce, useNextTick, useQueue } from '@polkadot/react-hooks';
 import { hexToU8a, isHex } from '@polkadot/util';
 
 import Input from '../Input.js';
@@ -43,6 +43,7 @@ function InputAddressMulti ({ available, availableLabel, className = '', default
   const [extendedAvailable, setExtendedAvailable] = useState<string[]>(available);
   const filter = useDebounce(_filter);
   const isNextTick = useNextTick();
+  const { queueAction } = useQueue();
 
   useEffect((): void => {
     defaultValue && setSelected(defaultValue);
@@ -65,16 +66,37 @@ function InputAddressMulti ({ available, availableLabel, className = '', default
   useEffect(() => {
     const u8a = isHex(_filter) && hexToU8a(_filter);
     const isEthAddress = u8a && u8a.length === 20;
+    let address;
 
     if (isEthAddress) {
       const convertedAddress = toAddress(_filter);
 
-      convertedAddress &&
-        !extendedAvailable.includes(convertedAddress) &&
-        setExtendedAvailable([...extendedAvailable, convertedAddress]);
+      address = convertedAddress;
+    }
+
+    if (_filter && !isEthAddress) {
+      address = _filter;
+    }
+
+    if (address && extendedAvailable.includes(address)) {
+      queueAction({
+        action: '',
+        message: t('This address has already been added to the list'),
+        status: 'eventWarn'
+      });
       setFilter('');
     }
-  }, [available, _filter, extendedAvailable]);
+
+    if (address && !extendedAvailable.includes(address)) {
+      setExtendedAvailable([...extendedAvailable, address]);
+      queueAction({
+        action: 'completed',
+        message: t('The address has been added to the list'),
+        status: 'success'
+      });
+      setFilter('');
+    }
+  }, [available, _filter, extendedAvailable, t, queueAction]);
 
   return (
     <StyledDiv className={`${className} ui--InputAddressMulti`}>
@@ -104,12 +126,12 @@ function InputAddressMulti ({ available, availableLabel, className = '', default
           <label>{availableLabel}</label>
           <div className='ui--InputAddressMulti-items'>
             {isNextTick
-              ? extendedAvailable.map((address) => (
+              ? extendedAvailable.map((address, index) => (
                 <Available
                   address={address}
                   filter={filter}
                   isHidden={selected?.includes(address)}
-                  key={address}
+                  key={index}
                   onSelect={onSelect}
                 />
               ))
