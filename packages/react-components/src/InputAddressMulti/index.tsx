@@ -84,7 +84,6 @@ function InputAddressMulti ({ available, availableLabel, className = '', default
         message: t('This address has already been added to the list'),
         status: 'eventWarn'
       });
-      setFilter('');
     }
 
     if (address && !extendedAvailable.includes(address)) {
@@ -94,8 +93,9 @@ function InputAddressMulti ({ available, availableLabel, className = '', default
         message: t('The address has been added to the list'),
         status: 'success'
       });
-      setFilter('');
     }
+
+    setFilter('');
   }, [available, _filter, extendedAvailable, t, queueAction]);
 
   return (
