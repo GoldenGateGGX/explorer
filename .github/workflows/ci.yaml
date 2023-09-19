@@ -3,11 +3,8 @@ name: "AWS CloudFront"
 on:
   push:
     branches:
-      - static-website
-
-env:
-  BUCKET_NAME: "blockexplorer"
-  CDN_ID: "E20QEE87PNORDU"
+      - master
+      - staging
 
 permissions:
       contents: write
@@ -36,8 +33,20 @@ jobs:
           DOCKER_BUILDKIT: 1
         run: docker build --no-cache --output bucket .
 
-      - name: Uploading Content to AWS
-        run: ls -ltr bucket/ && aws s3 sync --delete bucket/ s3://$BUCKET_NAME
+      - name: Staging Deployment
+        if: github.ref == 'refs/heads/staging'
+        env:
+          BUCKET_NAME: "blockexplorer-stg"
+          CDN_ID: "E2P431NQWIM14K"
+        run: |
+          aws s3 sync --delete bucket/ s3://$BUCKET_NAME
+          aws cloudfront create-invalidation --distribution-id $CDN_ID --paths "/*"
 
-      ##- name: CDN Cache Invalidation
-      ##  run: aws cloudfront create-invalidation --distribution-id $CDN_ID --paths "/*"
+      - name: Production Deployment
+        if: github.ref == 'refs/heads/master'
+        env:
+          BUCKET_NAME: "blockexplorer"
+          CDN_ID: "E20QEE87PNORDU"
+        run: |
+          aws s3 sync --delete bucket/ s3://$BUCKET_NAME
+          aws cloudfront create-invalidation --distribution-id $CDN_ID --paths "/*"
