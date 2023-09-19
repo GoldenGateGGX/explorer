@@ -9,6 +9,11 @@ env:
   BUCKET_NAME: "blockexplorer"
   CDN_ID: "E20QEE87PNORDU"
 
+permissions:
+      contents: write
+      pull-requests: write
+      id-token: write
+
 jobs:
   deploy:
     runs-on: ubuntu-latest
