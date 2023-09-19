@@ -50,6 +50,8 @@ function SetRewardDestination ({ controllerId, defaultDestination, onClose, stas
         <Modal.Columns hint={t('All rewards will go towards the selected output destination when a payout is made.')}>
           <Dropdown
             defaultValue={defaultDestination?.toString()}
+            // TODO: Temporary solution.
+            isDisabled={true}
             label={t('payment destination')}
             onChange={setDestination}
             options={options}
