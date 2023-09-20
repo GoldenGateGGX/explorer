@@ -13,7 +13,7 @@ function BatchWarning (): React.ReactElement | null {
   const { t } = useTranslation();
   const { api } = useApi();
 
-  if (isFunction(api.tx.utility.batchAll)) {
+  if (isFunction(api.tx.utility?.batchAll)) {
     return null;
   }
 

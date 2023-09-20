@@ -11,6 +11,8 @@
   "Copy": "Copy",
   "Council": "Council",
   "EVM address has been converted to Substrate format": "EVM address has been converted to Substrate format",
+  "This address has already been added to the list": "This address has already been added to the list",
+  "The address has been added to the list": "The address has been added to the list",
   "Edit": "Edit",
   "Era is overdue for completion due to current network operating conditions": "Era is overdue for completion due to current network operating conditions",
   "External": "External",
