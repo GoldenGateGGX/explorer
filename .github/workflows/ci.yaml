@@ -46,7 +46,7 @@ jobs:
         if: github.ref == 'refs/heads/master'
         env:
           BUCKET_NAME: "blockexplorer"
-          CDN_ID: "E20QEE87PNORDU"
+          CDN_ID: "E1ASM04U72INLA"
         run: |
           aws s3 sync --delete bucket/ s3://$BUCKET_NAME
           aws cloudfront create-invalidation --distribution-id $CDN_ID --paths "/*"
