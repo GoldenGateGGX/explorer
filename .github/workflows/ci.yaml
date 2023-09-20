@@ -1,0 +1,52 @@
+name: "AWS CloudFront"
+
+on:
+  push:
+    branches:
+      - master
+      - staging
+
+permissions:
+      contents: write
+      pull-requests: write
+      id-token: write
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+
+      - name: Check out code
+        uses: actions/checkout@v3
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v2
+
+      - name: Configure AWS Credentials
+        uses: aws-actions/configure-aws-credentials@v2
+        with:
+          role-to-assume: arn:aws:iam::${{ secrets.NONPROD_AWS_ACCOUNT_ID }}:role/github-dev
+          aws-region: eu-central-1
+
+      - name: Build Artifacts
+        env:
+          DOCKER_BUILDKIT: 1
+        run: docker build --no-cache --output bucket .
+
+      - name: Staging Deployment
+        if: github.ref == 'refs/heads/staging'
+        env:
+          BUCKET_NAME: "blockexplorer-stg"
+          CDN_ID: "E2P431NQWIM14K"
+        run: |
+          aws s3 sync --delete bucket/ s3://$BUCKET_NAME
+          aws cloudfront create-invalidation --distribution-id $CDN_ID --paths "/*"
+
+      - name: Production Deployment
+        if: github.ref == 'refs/heads/master'
+        env:
+          BUCKET_NAME: "blockexplorer"
+          CDN_ID: "E20QEE87PNORDU"
+        run: |
+          aws s3 sync --delete bucket/ s3://$BUCKET_NAME
+          aws cloudfront create-invalidation --distribution-id $CDN_ID --paths "/*"
