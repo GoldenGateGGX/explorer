@@ -41,7 +41,9 @@ function InputAddressMulti ({ available, availableLabel, className = '', default
   const [_filter, setFilter] = useState<string>('');
   const [selected, setSelected] = useState<string[]>([]);
   const [extendedAvailable, setExtendedAvailable] = useState<string[]>(available);
-  const filter = useDebounce(_filter);
+  const u8a = isHex(_filter) && hexToU8a(_filter);
+  const isEthAddress = u8a && u8a.length === 20;
+  const filter = useDebounce(isEthAddress ? toAddress(_filter) : _filter) || '';
   const isNextTick = useNextTick();
   const { queueAction } = useQueue();
 
@@ -64,8 +66,6 @@ function InputAddressMulti ({ available, availableLabel, className = '', default
   );
 
   useEffect(() => {
-    const u8a = isHex(_filter) && hexToU8a(_filter);
-    const isEthAddress = u8a && u8a.length === 20;
     let address;
 
     if (isEthAddress) {
@@ -78,25 +78,17 @@ function InputAddressMulti ({ available, availableLabel, className = '', default
       address = _filter;
     }
 
-    if (address && extendedAvailable.includes(address)) {
-      queueAction({
-        action: '',
-        message: t('This address has already been added to the list'),
-        status: 'eventWarn'
-      });
-    }
-
-    if (address && !extendedAvailable.includes(address)) {
+    if (address && isEthAddress && !extendedAvailable.includes(address)) {
       setExtendedAvailable([...extendedAvailable, address]);
+      setFilter('');
+
       queueAction({
         action: 'completed',
         message: t('The address has been added to the list'),
         status: 'success'
       });
     }
-
-    setFilter('');
-  }, [available, _filter, extendedAvailable, t, queueAction]);
+  }, [_filter, isEthAddress, extendedAvailable, t, queueAction]);
 
   return (
     <StyledDiv className={`${className} ui--InputAddressMulti`}>
