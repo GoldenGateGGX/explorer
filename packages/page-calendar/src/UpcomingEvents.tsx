@@ -19,7 +19,7 @@ interface Props {
 function UpcomingEvents ({ className, scheduled, setView }: Props): React.ReactElement<Props> {
   const { t } = useTranslation();
   const sched = useMemo(
-    () => scheduled.sort((a, b) => a.dateTime - b.dateTime),
+    () => scheduled.sort((a, b) => a.dateTime - b.dateTime).filter((e) => e.dateTime >= Date.now()),
     [scheduled]
   );
 
