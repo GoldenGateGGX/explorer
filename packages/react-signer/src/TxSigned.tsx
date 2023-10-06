@@ -445,7 +445,7 @@ function TxSigned ({ className, currentItem, isQueueSubmit, queueSize, requestAd
           onClick={_doStart}
           tabIndex={2}
         />
-        <div className='signToggle'>
+        <StyledDiv className='signToggle'>
           {!isBusy && (
             <Toggle
               isDisabled={!!currentItem.payload}
@@ -469,7 +469,7 @@ function TxSigned ({ className, currentItem, isQueueSubmit, queueSize, requestAd
               value={isQueueSubmit}
             />
           )}
-        </div>
+        </StyledDiv>
       </Modal.Actions>
     </>
   );
@@ -483,6 +483,12 @@ const StyledModalContent = styled(Modal.Content)`
 
   .ui--Checks {
     margin-top: 0.75rem;
+  }
+`;
+
+const StyledDiv = styled.div`
+  .ui--Switch {
+  display: none;
   }
 `;
 

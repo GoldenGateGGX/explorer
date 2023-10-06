@@ -81,7 +81,11 @@ export function handleTxResults (handler: 'send' | 'signAndSend', queueSetTxStat
 
     const status = result.status.type.toLowerCase() as QueueTxStatus;
 
-    console.log(`${handler}: status :: ${JSON.stringify(result)}`);
+    try {
+      console.log(`${handler}: status :: ${JSON.stringify(result)}`);
+    } catch {
+      console.log('JSON.stringify error');
+    }
 
     queueSetTxStatus(id, status, result);
     txUpdateCb(result);
