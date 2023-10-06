@@ -289,6 +289,12 @@ const StyledModal = styled(Modal)`
   .outcomes {
     margin-top: 1rem;
   }
+
+  .rpc-toggle {
+    .ui--Switch {
+      display: none;
+    }
+  }
 `;
 
 export default React.memo(Call);
