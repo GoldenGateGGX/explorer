@@ -17,7 +17,7 @@ interface EnvWindow {
 
 // TODO: Will be moved to config.
 const nodes = [
-  { link: 'wss://gate.ggxchain.net/sydney-archive:9944', name: 'SYDNEY' },
+  { link: 'wss://gate.ggxchain.net/sydney-archive', name: 'SYDNEY' },
   { link: 'wss://brooklyn-archive.dev.ggxchain.io:9944', name: 'BROOKLYN' }
 ];
 
