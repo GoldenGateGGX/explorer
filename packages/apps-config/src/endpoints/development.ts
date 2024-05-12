@@ -16,7 +16,10 @@ interface EnvWindow {
 }
 
 // TODO: Will be moved to config.
-const nodes = [{ link: 'wss://sydney-archive.dev.ggxchain.io:9944', name: 'SYDNEY' }, { link: 'wss://brooklyn-archive.dev.ggxchain.io:9944', name: 'BROOKLYN' }];
+const nodes = [
+  { link: 'wss://gate.ggxchain.net/sydney-archive', name: 'SYDNEY' },
+  { link: 'wss://brooklyn-archive.ggxchain.net/dev-brooklyn', name: 'BROOKLYN' }
+];
 
 export function createCustom (t: TFunction): LinkOption[] {
   const WS_URL = (
